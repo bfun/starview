@@ -1,0 +1,4 @@
+package starview
+
+func Test() {
+}
