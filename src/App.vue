@@ -4,21 +4,21 @@
       <lay-form class="form-row">
         <lay-form-item>
           <lay-select id="portSelect" v-model="port" @search="portSearch" allow-clear :show-search="true" placeholder="端口">
-            <lay-select-option v-for="item in ports" :key="item" :value="item">
+            <lay-select-option v-for="(item,index) in ports" :key="item" :value="item">
               {{ item }}
             </lay-select-option>
           </lay-select>
         </lay-form-item>
         <lay-form-item>
           <lay-select id="dtaSelect" v-model="dta" @search="dtaSearch" allow-clear :show-search="true" placeholder="DTA">
-            <lay-select-option v-for="item in dtas" :key="item" :value="item">
+            <lay-select-option v-for="(item,index) in dtas" :key="item" :value="item">
               {{ item }}
             </lay-select-option>
           </lay-select>
         </lay-form-item>
         <lay-form-item>
           <lay-select id="codeSelect" v-model="code" @search="codeSearch" allow-clear :show-search="true" placeholder="交易码">
-            <lay-select-option v-for="item in codes" :key="item" :value="item">
+            <lay-select-option v-for="(item,index) in codes" :key="item" :value="item">
               {{ item }}
             </lay-select-option>
           </lay-select>
@@ -31,58 +31,54 @@
 </template>
 
 <script setup>
-import { ref, reactive,onMounted, fetch } from 'vue';
+import { ref,onMounted } from 'vue';
 import axios from 'axios';
 
-const data = () => ({
-  portSelectedValue: '',
-  ports: ["5500", "5501", "5502", "6600", "65535"],
-  dtas: ['ABCS_SVR','POBS_SVR','NPOBS_SVR'],
-  codes: ['1001001100','1001001111','2003400114','02005700'],
-});
-let ports = data().ports;
-let dtas = data().dtas;
-let codes = data().codes;
+const initPorts = [];
+const initDtas = [];
+const initCodes = [];
+const ports = ref([]);
+const dtas = ref([]);
+const codes = ref([]);
 const port = ref('');
 const dta = ref('');
 const code = ref('');
-// const model = reactive({});
+
 const portSearch = (val) => {
-  console.log(val,data().ports)
+  port.value = val;
   if (val.trim() !== '') {
-    ports = data().ports.filter(v => v.includes(val))
+    ports.value = initPorts.filter(v => v.includes(val));
   }else{
-    ports = data().ports
+    ports.value = initPorts;
   }
 };
 const dtaSearch = (val) => {
-  console.log(val,data().dtas)
+  dta.value = val;
   if (val.trim() !== '') {
-    dtas = data().dtas.filter(v => v.includes(val.toUpperCase()))
+    dtas.value = initDtas.filter(v => v.includes(val.toUpperCase()));
   }else{
-    dtas = data().dtas
+    dtas.value = initDtas;
   }
 };
 const codeSearch = (val) => {
   if (val.trim() !== '') {
-    codes = data().codes.filter(v => v.includes(val))
+    codes.value = initCodes.filter(v => v.includes(val));
   }else{
-    codes = data().codes
+    codes.value = initCodes;
   }
 };
 onMounted(async () => {
-  await axios.get('http://locahost:8080/svrs').then((response) => {
-    data().ports = []
-    data().dtas = []
-    data().codes = []
+  await axios.get('http://locahost:8000/svrs').then((response) => {
     response.data.forEach((item) => {
-      data().ports.push(item.Port)
-      data().dtas.push(item.Name)
-    })
+      initPorts.push(item.Port);
+      port.value.push(item.Port);
+      initDtas.push(item.Name);
+      dtas.value.push(item.Name);
+    });
   })
   .catch(error => {
     console.error('Error fetching data: ', error);
-  })
+  });
 });
 </script>
 <style>
