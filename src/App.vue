@@ -61,6 +61,10 @@ const dtaSearch = (val) => {
   }
 };
 const codeSearch = (val) => {
+  if (dta.value.length === 0) {
+    alert('请输入端口或DTA')
+    return
+  }
   if (val.trim() !== '') {
     codes.value = initCodes.filter(v => v.includes(val));
   }else{
@@ -68,10 +72,10 @@ const codeSearch = (val) => {
   }
 };
 onMounted(async () => {
-  await axios.get('http://locahost:8000/svrs').then((response) => {
+  await axios.get('http://28.4.199.2:8000/svrs').then((response) => {
     response.data.forEach((item) => {
       initPorts.push(item.Port);
-      port.value.push(item.Port);
+      ports.value.push(item.Port);
       initDtas.push(item.Name);
       dtas.value.push(item.Name);
     });
