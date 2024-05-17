@@ -118,7 +118,7 @@ const codeChange = (val) => {
   }
   axios.get('http://28.4.199.2:8000/svc/'+dta.value+'/'+val).then((response) => {
     service.value = response.data;
-    service.value.Request.forEach((f)=>{mapper(f)})
+    service.value.Request.forEach((f)=>{mapper(f.Dta,f.Svc,f.Fmt)})
   })
       .catch(error => {
         console.error('Error fetching data: ', error);
@@ -147,11 +147,16 @@ const columns = [
   {title:"响应标签",width:"100px",key:"resTag"},
 ];
 const dataSource = [];
-const mapper = (format) => {
-  for(const i of format.Items){
-    let a = {"reqTag":i.XmlName, "dataElem":i.ElemName}
-    dataSource.push(a)
-  }
+const mapper = (dta,svc,fmt) => {
+  axios.get('http://28.4.199.2:8000/fmt/'+dta+'/'+svc+'/'+fmt).then((response) => {
+    response.data.forEach((k,v) => {
+      let a = {"reqTag":k, "dataElem":v};
+      dataSource.push(a);
+    })
+        .catch(error => {
+          console.error('Error fetching data: ', error);
+        });
+  })
 }
 </script>
 <style>
