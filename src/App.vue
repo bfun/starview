@@ -118,8 +118,10 @@ onMounted(async () => {
   await axios.get('http://28.4.199.2:8000/svrs').then((response) => {
     response.data.forEach((item) => {
       initSvrs.push(item);
-      initPorts.push(item.Port);
-      ports.value.push(item.Port);
+      if(item.Port!=='') {
+        initPorts.push(item.Port);
+        ports.value.push(item.Port);
+      }
       initDtas.push(item.Name);
       dtas.value.push(item.Name);
     });
