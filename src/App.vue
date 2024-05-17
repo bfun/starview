@@ -146,13 +146,12 @@ const columns = [
   {title:"数据元素",width:"100px",key:"dataElem"},
   {title:"响应标签",width:"100px",key:"resTag"},
 ];
-const dataSource = [];
+const dataSource = ref([]);
 const mapper = (dta,svc,fmt) => {
   axios.get('http://28.4.199.2:8000/fmt/'+dta+'/'+svc+'/'+fmt).then((response) => {
-    console.log(response.data);
     for (let k in response.data) {
-      let a = {"reqTag": k, "dataElem": v};
-      dataSource.push(a);
+      let a = {"reqTag": k, "dataElem": response.data[k]};
+      dataSource.value.push(a)
     }
   })
       .catch(error => {
