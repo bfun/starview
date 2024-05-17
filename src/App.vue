@@ -3,21 +3,21 @@
     <lay-header>
       <lay-form class="form-row">
         <lay-form-item>
-          <lay-select id="portSelect" v-model="port" @search="portSearch" allow-clear :show-search="true" placeholder="端口">
+          <lay-select id="portSelect" v-model="port" @search="portSearch" @change="portChange" allow-clear :show-search="true" placeholder="端口">
             <lay-select-option v-for="(item,index) in ports" :key="item" :value="item">
               {{ item }}
             </lay-select-option>
           </lay-select>
         </lay-form-item>
         <lay-form-item>
-          <lay-select id="dtaSelect" v-model="dta" @search="dtaSearch" allow-clear :show-search="true" placeholder="DTA">
+          <lay-select id="dtaSelect" v-model="dta" @search="dtaSearch" @change="dtaChange" allow-clear :show-search="true" placeholder="DTA">
             <lay-select-option v-for="(item,index) in dtas" :key="item" :value="item">
               {{ item }}
             </lay-select-option>
           </lay-select>
         </lay-form-item>
         <lay-form-item>
-          <lay-select id="codeSelect" v-model="code" @search="codeSearch" allow-clear :show-search="true" placeholder="交易码">
+          <lay-select id="codeSelect" v-model="code" @search="codeSearch" @change="codeChange" allow-clear :show-search="true" placeholder="交易码">
             <lay-select-option v-for="(item,index) in codes" :key="item" :value="item">
               {{ item }}
             </lay-select-option>
@@ -49,27 +49,43 @@ const portSearch = (val) => {
   port.value = val;
   if (val.trim() !== '') {
     ports.value = initPorts.filter(v => v.includes(val));
-    initDtas.forEach(i => {
-      if (i.Port === val) {
-        dta.value = i.Name;
-      }
-    })
   }else{
     ports.value = initPorts;
   }
+};
+const portChange = (val) => {
+  if (val.trim() === '') {
+    return;
+  }
+  initDtas.forEach(i => {
+    if (i.Port === val) {
+      dta.value = i.Name;
+    }
+  })
 };
 const dtaSearch = (val) => {
   dta.value = val;
   if (val.trim() !== '') {
     dtas.value = initDtas.filter(v => v.includes(val.toUpperCase()));
-    initDtas.forEach(i => {
-      if (i.Name === val.toUpperCase()) {
-        port.value = i.Port;
-      }
-    })
   }else{
     dtas.value = initDtas;
   }
+};
+const dtaChange = (val) => {
+  if (val.trim() === '') {
+    return;
+  }
+  initDtas.forEach(i => {
+    if (i.Name === val.toUpperCase()) {
+      port.value = i.Port;
+    }
+  })
+  axios.get('http://28.4.199.2:8000/svcs/'+val).then((response) => {
+    codes.value = response.data;
+  })
+      .catch(error => {
+        console.error('Error fetching data: ', error);
+      });
 };
 const codeSearch = (val) => {
   if (dta.value.length === 0) {
