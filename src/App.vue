@@ -25,7 +25,10 @@
         </lay-form-item>
       </lay-form>
     </lay-header>
-    <lay-body>{{ service }}</lay-body>
+    <lay-body>
+      <div>{{ service }}</div>
+      <lay-table :default-toolbar="true" :columns="columns" :data-source="dataSource"></lay-table>
+    </lay-body>
     <lay-footer></lay-footer>
   </lay-layout>
 </template>
@@ -115,6 +118,7 @@ const codeChange = (val) => {
   }
   axios.get('http://28.4.199.2:8000/svc/'+dta.value+'/'+val).then((response) => {
     service.value = response.data;
+    service.value.Request.forEach((f)=>{mapper(f)})
   })
       .catch(error => {
         console.error('Error fetching data: ', error);
@@ -136,6 +140,19 @@ onMounted(async () => {
     console.error('Error fetching data: ', error);
   });
 });
+
+const columns = [
+  {title:"请求标签",width:"100px",key:"reqTag"},
+  {title:"数据元素",width:"100px",key:"dataElem"},
+  {title:"响应标签",width:"100px",key:"resTag"},
+];
+const dataSource = [];
+const mapper = (format) => {
+  for(const i of format.Items){
+    let a = {"reqTag":i.XmlName, "dataElem":i.ElemName}
+    dataSource.push(a)
+  }
+}
 </script>
 <style>
 .form-row {
