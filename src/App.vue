@@ -34,6 +34,7 @@
 import { ref,onMounted } from 'vue';
 import axios from 'axios';
 
+const initSvrs = [];
 const initPorts = [];
 const initDtas = [];
 const initCodes = [];
@@ -48,6 +49,11 @@ const portSearch = (val) => {
   port.value = val;
   if (val.trim() !== '') {
     ports.value = initPorts.filter(v => v.includes(val));
+    initDtas.forEach(i => {
+      if (i.Port === val) {
+        dta.value = i.Name;
+      }
+    })
   }else{
     ports.value = initPorts;
   }
@@ -56,6 +62,11 @@ const dtaSearch = (val) => {
   dta.value = val;
   if (val.trim() !== '') {
     dtas.value = initDtas.filter(v => v.includes(val.toUpperCase()));
+    initDtas.forEach(i => {
+      if (i.Name === val.toUpperCase()) {
+        port.value = i.Port;
+      }
+    })
   }else{
     dtas.value = initDtas;
   }
@@ -74,6 +85,7 @@ const codeSearch = (val) => {
 onMounted(async () => {
   await axios.get('http://28.4.199.2:8000/svrs').then((response) => {
     response.data.forEach((item) => {
+      initSvrs.push(item);
       initPorts.push(item.Port);
       ports.value.push(item.Port);
       initDtas.push(item.Name);
