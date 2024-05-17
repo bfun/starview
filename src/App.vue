@@ -149,14 +149,15 @@ const columns = [
 const dataSource = [];
 const mapper = (dta,svc,fmt) => {
   axios.get('http://28.4.199.2:8000/fmt/'+dta+'/'+svc+'/'+fmt).then((response) => {
-    response.data.forEach((k,v) => {
-      let a = {"reqTag":k, "dataElem":v};
+    console.log(response.data);
+    for (let k in response.data) {
+      let a = {"reqTag": k, "dataElem": v};
       dataSource.push(a);
-    })
-        .catch(error => {
-          console.error('Error fetching data: ', error);
-        });
+    }
   })
+      .catch(error => {
+        console.error('Error fetching data: ', error);
+      });
 }
 </script>
 <style>
