@@ -58,11 +58,13 @@ const portChange = (val) => {
   if (val.trim() === '') {
     return;
   }
-  initSvrs.forEach(i => {
+  for(const i of initSvrs){
     if (i.Port === val) {
       dta.value = i.Name;
+      getCodes(i.Name)
+      return
     }
-  })
+  }
 };
 const dtaSearch = (val) => {
   dta.value = val;
@@ -76,18 +78,22 @@ const dtaChange = (val) => {
   if (val.trim() === '') {
     return;
   }
-  initSvrs.forEach(i => {
+  for(const i of initSvrs) {
     if (i.Name === val.toUpperCase()) {
       port.value = i.Port;
+      getCodes(i.Name)
+      return
     }
-  })
-  axios.get('http://28.4.199.2:8000/svcs/'+val).then((response) => {
+  }
+};
+const getCodes = (dta) => {
+  axios.get('http://28.4.199.2:8000/svcs/'+dta).then((response) => {
     codes.value = response.data;
   })
       .catch(error => {
         console.error('Error fetching data: ', error);
       });
-};
+}
 const codeSearch = (val) => {
   if (dta.value.length === 0) {
     alert('请输入端口或DTA')
