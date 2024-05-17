@@ -25,7 +25,7 @@
         </lay-form-item>
       </lay-form>
     </lay-header>
-    <lay-body></lay-body>
+    <lay-body>{{ service }}</lay-body>
     <lay-footer></lay-footer>
   </lay-layout>
 </template>
@@ -44,6 +44,7 @@ const codes = ref([]);
 const port = ref('');
 const dta = ref('');
 const code = ref('');
+const service = ref('')
 
 const portSearch = (val) => {
   port.value = val;
@@ -57,7 +58,7 @@ const portChange = (val) => {
   if (val.trim() === '') {
     return;
   }
-  initDtas.forEach(i => {
+  initSvrs.forEach(i => {
     if (i.Port === val) {
       dta.value = i.Name;
     }
@@ -75,7 +76,7 @@ const dtaChange = (val) => {
   if (val.trim() === '') {
     return;
   }
-  initDtas.forEach(i => {
+  initSvrs.forEach(i => {
     if (i.Name === val.toUpperCase()) {
       port.value = i.Port;
     }
@@ -98,6 +99,21 @@ const codeSearch = (val) => {
     codes.value = initCodes;
   }
 };
+const codeChange = (val) => {
+  if (val.trim()===''){
+    return
+  }
+  if (dta.value.length === 0) {
+    alert('请输入端口或DTA')
+    return
+  }
+  axios.get('http://28.4.199.2:8000/svc/'+dta.value+'/'+val).then((response) => {
+    service.value = response.data;
+  })
+      .catch(error => {
+        console.error('Error fetching data: ', error);
+      });
+}
 onMounted(async () => {
   await axios.get('http://28.4.199.2:8000/svrs').then((response) => {
     response.data.forEach((item) => {
