@@ -28,10 +28,14 @@
     <lay-body>
       <div>{{ service }}</div>
       <lay-space direction="vertical" fill>
-      <div v-for="(v,i) in dataSource">
-        <lay-line contentPosition="left">{{ i }}. {{ v.fmt }}</lay-line>
-        <lay-table :default-toolbar="false" :columns="columns" :data-source="v.items"></lay-table>
-      </div>
+        <div v-for="(v,i) in reqDataSource">
+          <lay-line contentPosition="left">请求 {{ i }}: {{ v.SDta }}.{{v.SSvc}}.{{v.SFmt}} -> {{v.DDta}}.{{v.DSvc}}.{{v.DFmt}}</lay-line>
+          <lay-table :default-toolbar="false" :columns="columns" :data-source="v.Items"></lay-table>
+        </div>
+        <div v-for="(v,i) in resDataSource">
+          <lay-line contentPosition="left">响应 {{ i }}: {{ v.SDta }}.{{v.SSvc}}.{{v.SFmt}} -> {{v.DDta}}.{{v.DSvc}}.{{v.DFmt}}</lay-line>
+          <lay-table :default-toolbar="false" :columns="columns" :data-source="v.Items"></lay-table>
+        </div>
       </lay-space>
     </lay-body>
     <lay-footer></lay-footer>
@@ -73,6 +77,7 @@ const portChange = (val) => {
       return
     }
   }
+  dataSource.value = []
 };
 const dtaSearch = (val) => {
   dta.value = val;
@@ -93,6 +98,7 @@ const dtaChange = (val) => {
       return
     }
   }
+  dataSource.value = []
 };
 const getCodes = (dta) => {
   axios.get('http://28.4.199.2:8000/svcs/'+dta).then((response) => {
@@ -123,11 +129,14 @@ const codeChange = (val) => {
   }
   axios.get('http://28.4.199.2:8000/svc/'+dta.value+'/'+val).then((response) => {
     service.value = response.data;
-    service.value.Request.forEach((f)=>{mapper(f.Dta,f.Svc,f.Fmt)})
+    // service.value.Request.forEach((f)=>{mapper(f.Dta,f.Svc,f.Fmt)})
+    reqDataSource.value = response.data.RequestItems
+    resDataSource.value = response.data.ResponseItems
   })
       .catch(error => {
         console.error('Error fetching data: ', error);
       });
+  dataSource.value = []
 }
 onMounted(async () => {
   await axios.get('http://28.4.199.2:8000/svrs').then((response) => {
@@ -152,6 +161,8 @@ const columns = [
   {title:"服务方标签",width:"100px",key:"cltTag"},
 ];
 const dataSource = ref([]);
+const reqDataSource = ref([]);
+const resDataSource = ref([]);
 const mapper = (dta,svc,fmt) => {
   axios.get('http://28.4.199.2:8000/fmt/'+dta+'/'+svc+'/'+fmt).then((response) => {
     for (let k in response.data) {
