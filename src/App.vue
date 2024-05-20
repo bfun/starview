@@ -26,14 +26,13 @@
       </lay-form>
     </lay-header>
     <lay-body>
-      <div>{{ service }}</div>
       <lay-space direction="vertical" fill>
         <div v-for="(v,i) in reqDataSource">
-          <lay-line contentPosition="left">请求 {{ i }}: {{ v.SDta }}.{{v.SSvc}}.{{v.SFmt}} -> {{v.DDta}}.{{v.DSvc}}.{{v.DFmt}}</lay-line>
+          <lay-line theme="green" margin-top="20px" contentPosition="left">请求 {{ i }}: {{ v.SDta }}.{{v.SSvc}}.{{v.SFmt}} -> {{v.DDta}}.{{v.DSvc}}.{{v.DFmt}}</lay-line>
           <lay-table :default-toolbar="false" :columns="columns" :data-source="v.Items"></lay-table>
         </div>
         <div v-for="(v,i) in resDataSource">
-          <lay-line contentPosition="left">响应 {{ i }}: {{ v.SDta }}.{{v.SSvc}}.{{v.SFmt}} -> {{v.DDta}}.{{v.DSvc}}.{{v.DFmt}}</lay-line>
+          <lay-line theme="green" margin-top="20px" contentPosition="left">响应 {{ i }}: {{ v.SDta }}.{{v.SSvc}}.{{v.SFmt}} -> {{v.DDta}}.{{v.DSvc}}.{{v.DFmt}}</lay-line>
           <lay-table :default-toolbar="false" :columns="columns" :data-source="v.Items"></lay-table>
         </div>
       </lay-space>
@@ -77,7 +76,8 @@ const portChange = (val) => {
       return
     }
   }
-  dataSource.value = []
+  reqDataSource.value = []
+  resDataSource.value = []
 };
 const dtaSearch = (val) => {
   dta.value = val;
@@ -98,7 +98,8 @@ const dtaChange = (val) => {
       return
     }
   }
-  dataSource.value = []
+  reqDataSource.value = []
+  resDataSource.value = []
 };
 const getCodes = (dta) => {
   axios.get('http://28.4.199.2:8000/svcs/'+dta).then((response) => {
@@ -136,7 +137,8 @@ const codeChange = (val) => {
       .catch(error => {
         console.error('Error fetching data: ', error);
       });
-  dataSource.value = []
+  reqDataSource.value = []
+  resDataSource.value = []
 }
 onMounted(async () => {
   await axios.get('http://28.4.199.2:8000/svrs').then((response) => {
