@@ -27,7 +27,12 @@
     </lay-header>
     <lay-body>
       <div>{{ service }}</div>
-      <lay-table :default-toolbar="true" :columns="columns" :data-source="dataSource"></lay-table>
+      <div v-for="(k,v,i) in dataSource">
+        <h3>{{ k }}</h3>
+        <h4>{{ v }}</h4>
+        <h5>{{ i }}</h5>
+      <!-- lay-table :default-toolbar="false" :columns="columns" :data-source="v"></lay-table -->
+      </div>
     </lay-body>
     <lay-footer></lay-footer>
   </lay-layout>
@@ -142,16 +147,21 @@ onMounted(async () => {
 });
 
 const columns = [
-  {title:"请求标签",width:"100px",key:"reqTag"},
+  {title:"消费方标签",width:"100px",key:"svrTag"},
   {title:"数据元素",width:"100px",key:"dataElem"},
-  {title:"响应标签",width:"100px",key:"resTag"},
+  {title:"服务方标签",width:"100px",key:"cltTag"},
 ];
 const dataSource = ref([]);
 const mapper = (dta,svc,fmt) => {
   axios.get('http://28.4.199.2:8000/fmt/'+dta+'/'+svc+'/'+fmt).then((response) => {
     for (let k in response.data) {
-      let a = {"reqTag": k, "dataElem": response.data[k]};
-      dataSource.value.push(a)
+      const f = response.data[k]
+      const items = []
+      for(let tag in f){
+        let a = {"svrTag": tag, "dataElem": f[tag]};
+        items.push(a)
+      }
+      dataSource.value[f] = items
     }
   })
       .catch(error => {
