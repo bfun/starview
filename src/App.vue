@@ -27,10 +27,12 @@
     </lay-header>
     <lay-body>
       <div>{{ service }}</div>
+      <lay-space direction="vertical" fill>
       <div v-for="(v,i) in dataSource">
-        <h3>{{ i }}. {{ v }}</h3>
+        <lay-line contentPosition="left">{{ i }}. {{ v.fmt }}</lay-line>
         <lay-table :default-toolbar="false" :columns="columns" :data-source="v.items"></lay-table>
       </div>
+      </lay-space>
     </lay-body>
     <lay-footer></lay-footer>
   </lay-layout>
