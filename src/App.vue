@@ -27,11 +27,9 @@
     </lay-header>
     <lay-body>
       <div>{{ service }}</div>
-      <div>{{dataSource}}</div>
       <div v-for="(v,i) in dataSource">
-        <h4>{{ v }}</h4>
-        <h5>{{ i }}</h5>
-      <!-- lay-table :default-toolbar="false" :columns="columns" :data-source="v"></lay-table -->
+        <h3>{{ i }}. {{ v }}</h3>
+        <lay-table :default-toolbar="false" :columns="columns" :data-source="v.items"></lay-table>
       </div>
     </lay-body>
     <lay-footer></lay-footer>
@@ -161,7 +159,7 @@ const mapper = (dta,svc,fmt) => {
         let a = {"svrTag": tag, "dataElem": f[tag]};
         items.push(a)
       }
-      dataSource.value.push({fmt:f,items:items})
+      dataSource.value.push({fmt:k,items:items})
     }
   })
       .catch(error => {
