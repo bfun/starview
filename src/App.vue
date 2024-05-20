@@ -156,9 +156,9 @@ onMounted(async () => {
 });
 
 const columns = [
-  {title:"消费方标签",width:"100px",key:"svrTag"},
-  {title:"数据元素",width:"100px",key:"dataElem"},
-  {title:"服务方标签",width:"100px",key:"cltTag"},
+  {title:"消费方标签",width:"100px",key:"SvrTag"},
+  {title:"数据元素",width:"100px",key:"Elem"},
+  {title:"服务方标签",width:"100px",key:"CltTag"},
 ];
 const dataSource = ref([]);
 const reqDataSource = ref([]);
