@@ -27,8 +27,8 @@
     </lay-header>
     <lay-body>
       <div>{{ service }}</div>
-      <div v-for="(k,v,i) in dataSource">
-        <h3>{{ k }}</h3>
+      <div>{{dataSource}}</div>
+      <div v-for="(v,i) in dataSource">
         <h4>{{ v }}</h4>
         <h5>{{ i }}</h5>
       <!-- lay-table :default-toolbar="false" :columns="columns" :data-source="v"></lay-table -->
@@ -161,7 +161,7 @@ const mapper = (dta,svc,fmt) => {
         let a = {"svrTag": tag, "dataElem": f[tag]};
         items.push(a)
       }
-      dataSource.value[f] = items
+      dataSource.value.push({fmt:f,items:items})
     }
   })
       .catch(error => {
