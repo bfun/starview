@@ -28,11 +28,11 @@
     <lay-body>
       <lay-space direction="vertical" fill>
         <div v-for="(v,i) in reqDataSource">
-          <lay-line theme="green" margin-top="20px" contentPosition="left">请求 {{ i }}: {{ v.SDta }}.{{v.SSvc}}.{{v.SFmt}} -> {{v.DDta}}.{{v.DSvc}}.{{v.DFmt}}</lay-line>
+          <lay-line theme="green" margin="50px" contentPosition="left">请求 {{ i }}: {{ v.SDta }}.{{v.SSvc}}.{{v.SFmt}} -> {{v.DDta}}.{{v.DSvc}}.{{v.DFmt}}</lay-line>
           <lay-table :default-toolbar="false" :columns="columns" :data-source="v.Items"></lay-table>
         </div>
         <div v-for="(v,i) in resDataSource">
-          <lay-line theme="green" margin-top="20px" contentPosition="left">响应 {{ i }}: {{ v.SDta }}.{{v.SSvc}}.{{v.SFmt}} -> {{v.DDta}}.{{v.DSvc}}.{{v.DFmt}}</lay-line>
+          <lay-line theme="green" margin="50px" contentPosition="left">响应 {{ i }}: {{ v.SDta }}.{{v.SSvc}}.{{v.SFmt}} -> {{v.DDta}}.{{v.DSvc}}.{{v.DFmt}}</lay-line>
           <lay-table :default-toolbar="false" :columns="columns" :data-source="v.Items"></lay-table>
         </div>
       </lay-space>
